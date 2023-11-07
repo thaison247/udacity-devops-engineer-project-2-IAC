@@ -14,14 +14,24 @@ Udacity Cloud DevOps Engineer - Deploy a high availability web app using CloudFo
 
 3. Create Servers
 ```
-./create.sh udagram-servers servers.yml server-parameters.json <aws_profile>
+./create.sh udagram-servers udagram.yml udagram-parameters.json <aws_profile>
 ```
 
 4. Update Servers
 ```
-./update.sh udagram-servers servers.yml server-parameters.json  <aws_profile>    
+./update.sh udagram-servers udagram.yml udagram-parameters.json  <aws_profile>    
+```
+
+5. Delete Networks
+```
+./delete.sh udagram-network  <aws_profile>    
+```
+
+6. Delete Servers
+```
+./delete.sh udagram-servers  <aws_profile>    
 ```
 
 ---
 ## Output
-Web server: http://udagra-webse-lorggyzjmq91-504615331.us-east-1.elb.amazonaws.com/
+Web server: http://udagra-webse-fv9jifh4gljx-1250740730.us-east-1.elb.amazonaws.com/
