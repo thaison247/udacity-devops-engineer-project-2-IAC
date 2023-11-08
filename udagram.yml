@@ -68,29 +68,31 @@ Resources:
 
 #### The web server (EC2 Instance) launch config ####
   WebAppLaunchConfig:
-    Type: AWS::AutoScaling::LaunchConfiguration
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          apt-get update -y
-          apt-get install unzip awscli -y
-          apt-get install apache2 -y
-          systemctl start apache2.service
-          cd /var/www/html
-          sudo rm index.html
-          sudo aws s3 cp s3://udacity-demo-1/udacity.zip .
-          sudo unzip -o udacity.zip
-          systemctl start apache2.service
-      ImageId: ami-08fdec01f5df9998f
-      SecurityGroups:
-      - Ref: WebServerSecGroup
-      IamInstanceProfile: !Ref EC2InstanceProfile
-      InstanceType: t3.medium
-      BlockDeviceMappings:
-      - DeviceName: "/dev/sdk"
-        Ebs:
-          VolumeSize: '10'
+      LaunchTemplateData:     
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            apt-get update -y
+            apt-get install unzip awscli -y
+            apt-get install apache2 -y
+            systemctl start apache2.service
+            cd /var/www/html
+            sudo rm index.html
+            sudo aws s3 cp s3://udacity-demo-1/udacity.zip .
+            sudo unzip -o udacity.zip
+            systemctl start apache2.service
+        ImageId: ami-08fdec01f5df9998f
+        SecurityGroupIds:
+          - !GetAtt WebServerSecGroup.GroupId
+        IamInstanceProfile:
+          Arn: !GetAtt EC2InstanceProfile.Arn
+        InstanceType: t3.medium
+        BlockDeviceMappings:
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: '10'
 
 #### Auto scaling group ####
   WebAppGroup:
@@ -101,8 +103,9 @@ Resources:
             !Sub "${EnvironmentName}-PRIV-NETS"
       MinSize: '4'
       MaxSize: '6'
-      LaunchConfigurationName:
-        Ref: WebAppLaunchConfig
+      LaunchTemplate:
+        LaunchTemplateId: !Ref WebAppLaunchConfig
+        Version: !GetAtt WebAppLaunchConfig.LatestVersionNumber
       TargetGroupARNs:
         - Ref: WebAppTargetGroup
 

@@ -34,4 +34,4 @@ Udacity Cloud DevOps Engineer - Deploy a high availability web app using CloudFo
 
 ---
 ## Output
-Web server: http://udagra-webse-fv9jifh4gljx-1250740730.us-east-1.elb.amazonaws.com/
+Web server: http://udagra-webse-kns5ta9zckw4-322874444.us-east-1.elb.amazonaws.com/
